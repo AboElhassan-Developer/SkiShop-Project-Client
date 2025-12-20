@@ -1,0 +1,15 @@
+.action-height {
+  height: 56px; // نفس ارتفاع Angular Material الافتراضي
+}
+
+button.action-height {
+  min-height: 56px;
+  padding: 0 16px;
+}
+
+mat-form-field.action-height {
+  .mat-mdc-form-field-flex {
+    height: 56px;
+    align-items: center;
+  }
+}
