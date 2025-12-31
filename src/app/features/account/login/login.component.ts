@@ -6,12 +6,19 @@ import { MatCard } from "@angular/material/card";
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from "@angular/material/input";
 import { MatAnchor } from "@angular/material/button";
+import { MatButton } from '@angular/material/button';
+
 
 @Component({
   selector: 'app-login',
   imports: [MatCard,
     ReactiveFormsModule,
-    MatFormField, MatLabel, MatInput, MatAnchor],
+    MatFormField,
+     MatLabel,
+     MatInput,
+      MatAnchor,
+      MatButton
+    ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
