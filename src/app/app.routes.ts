@@ -14,6 +14,8 @@ import { CheckoutSuccessComponent } from './features/checkout/checkout-success/c
 import { OrderComponent } from './features/orders/order/order.component';
 import { OrderDetailedComponent } from './features/orders/order-detailed/order-detailed.component';
 import { orderCompleteGuard } from './core/guards/order-complete-guard';
+import { AdminComponent } from './features/admin/admin/admin.component';
+import { adminGuard } from './core/guards/admin-guard';
 
 export const routes: Routes = [
     {path :'', component: HomeComponent},
@@ -22,14 +24,16 @@ export const routes: Routes = [
     {path :'cart', component: CartComponent},
     {path :'account/login', component: LoginComponent},
     {path :'account/register', component: RegisterComponent},
-         {path :'checkout', component: CheckoutComponent},
+         {path :'checkout', component: CheckoutComponent, canActivate: [authGuard]},
         {path :'checkout/success', component: CheckoutSuccessComponent,
           canActivate:[authGuard, orderCompleteGuard]
         },
-        {path :'orders', component: OrderComponent,},
-        {path :'orders/:id', component: OrderDetailedComponent},
+        {path :'orders', component: OrderComponent, canActivate: [authGuard]},
+        {path :'orders/:id', component: OrderDetailedComponent, canActivate: [authGuard]},
     {path :'test-error', component:TestErrorComponent},
      {path :'server-error', component:ServerErrorComponent},
+     {path :'admin', component:AdminComponent, canActivate: [authGuard,adminGuard]},
+
       {path :'not-found', component:NotFoundComponent},
     {path :'**',redirectTo:'not-found',pathMatch:'full'},
 

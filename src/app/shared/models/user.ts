@@ -3,6 +3,7 @@ firstName :string;
 lastName :string;
 email:string;
 address:Address;
+roles:string | string[];
 }
 
 export type Address ={
