@@ -12,7 +12,6 @@ import { RegisterComponent } from './features/account/register/register.componen
 import { authGuard } from './core/guards/auth-guard';
 import { CheckoutSuccessComponent } from './features/checkout/checkout-success/checkout-success.component';
 import { OrderComponent } from './features/orders/order/order.component';
-import { OrderDetailedComponent } from './features/orders/order-detailed/order-detailed.component';
 import { orderCompleteGuard } from './core/guards/order-complete-guard';
 import { AdminComponent } from './features/admin/admin/admin.component';
 import { adminGuard } from './core/guards/admin-guard';
@@ -22,17 +21,21 @@ export const routes: Routes = [
     {path :'shop', component: ShopComponent},
     {path :'shop/:id', component: ProductDetailsComponent},
     {path :'cart', component: CartComponent},
-    {path :'account/login', component: LoginComponent},
-    {path :'account/register', component: RegisterComponent},
-         {path :'checkout', component: CheckoutComponent, canActivate: [authGuard]},
-        {path :'checkout/success', component: CheckoutSuccessComponent,
-          canActivate:[authGuard, orderCompleteGuard]
+        {path :'account', loadChildren: () => import('./features/account/routes')
+          .then(r => r.accountRoutes)
         },
-        {path :'orders', component: OrderComponent, canActivate: [authGuard]},
-        {path :'orders/:id', component: OrderDetailedComponent, canActivate: [authGuard]},
+        {path :'checkout', loadChildren: () => import('./features/checkout/routes')
+          .then(r => r.checkoutRoutes)
+        },
+         {path :'order', loadChildren: () => import('./features/orders/routes')
+          .then(r => r.orderRoutes)
+        },
+
     {path :'test-error', component:TestErrorComponent},
      {path :'server-error', component:ServerErrorComponent},
-     {path :'admin', component:AdminComponent, canActivate: [authGuard,adminGuard]},
+     {path :'admin', loadComponent: () => import('./features/admin/admin/admin.component')
+      .then(c=> c.AdminComponent), canActivate: [authGuard,adminGuard]},
+
 
       {path :'not-found', component:NotFoundComponent},
     {path :'**',redirectTo:'not-found',pathMatch:'full'},
