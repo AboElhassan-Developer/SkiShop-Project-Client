@@ -6,7 +6,7 @@ import {MatTooltipModule} from '@angular/material/tooltip'
 import { MatTabsModule } from '@angular/material/tabs';
 import { Order } from '../../../shared/models/order';import { AdminService } from '../../../core/services/admin.service';
 import { OrderParams } from '../../../shared/models/orderParams';
-import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { RouterLink } from "@angular/router";
@@ -16,7 +16,6 @@ import { DialogService } from '../../../core/services/dialog.service';
   imports: [
     MatTableModule,
     MatPaginatorModule,
-    MatButton,
     MatIcon,
     MatTabsModule,
     MatTableModule,

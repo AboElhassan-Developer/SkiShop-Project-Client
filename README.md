@@ -1,6 +1,32 @@
-# Client
+# SkiShop Client
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.13.
+A modern, responsive E-Commerce frontend built with **Angular 20** and **TypeScript**, featuring reactive forms, multi-step checkout, and Stripe integration.
+
+## 🎯 Overview
+
+SkiShop Client is the frontend for a complete E-Commerce platform. It provides an intuitive interface for browsing products, managing shopping baskets, and completing secure checkout.
+
+## ✨ Key Features
+
+- Dynamic product catalog with filtering & search
+- Secure user registration and login with JWT
+- Shopping basket management with real-time updates
+- Multi-step checkout wizard with validation
+- Stripe payment integration with 3D Secure
+- Responsive design for all devices
+- Angular Material + Tailwind CSS styling
+- SignalR for real-time notifications
+
+## 🛠️ Technologies
+
+- **Angular 20** with TypeScript
+- **Reactive Forms** for form handling
+- **Angular Material** components
+- **Tailwind CSS** for styling
+- **Stripe API** for payments
+- **RxJS** for state management
+
+---
 
 ## Development server
 

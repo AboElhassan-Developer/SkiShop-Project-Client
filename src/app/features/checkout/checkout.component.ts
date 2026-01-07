@@ -11,11 +11,11 @@ import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import{MatProgressSpinnerModule} from'@angular/material/progress-spinner';
 import { Address } from '../../shared/models/user';
 import { AccountService } from '../../core/services/account.service';
-import { firstValueFrom, last } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { CheckoutDeliveryComponent } from "./checkout-delivery/checkout-delivery.component";
 import { CheckoutReviewComponent } from "./checkout-review/checkout-review.component";
 import { CartService } from '../../core/services/cart.service';
-import { CurrencyPipe, JsonPipe } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 import { OrderToCreate, ShippingAddress } from '../../shared/models/order';
 import { OrderService } from '../../core/services/order.service';
 @Component({
@@ -31,8 +31,7 @@ import { OrderService } from '../../core/services/order.service';
     CheckoutDeliveryComponent,
     CheckoutReviewComponent,
     CurrencyPipe,
-    JsonPipe,
-   MatProgressSpinnerModule
+    MatProgressSpinnerModule
 ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.scss',
