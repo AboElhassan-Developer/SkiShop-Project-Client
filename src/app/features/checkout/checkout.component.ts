@@ -18,6 +18,7 @@ import { CartService } from '../../core/services/cart.service';
 import { CurrencyPipe } from '@angular/common';
 import { OrderToCreate, ShippingAddress } from '../../shared/models/order';
 import { OrderService } from '../../core/services/order.service';
+import { SignalrService } from '../../core/services/signalr.service';
 @Component({
   selector: 'app-checkout',
   imports: [
@@ -42,7 +43,7 @@ private snackbar=inject(SnackbarService);
 private router =inject(Router);
 private accountService =inject(AccountService);
 private orderService =inject(OrderService);
-
+private signalrService = inject(SignalrService);
  cartService=inject(CartService);
 addressElement?: StripeAddressElement;
 paymentElement?: StripePaymentElement;
@@ -58,6 +59,11 @@ loading=false;
 
 async ngOnInit() {
     try {
+       this.cartService.selectedDelivery.set(null);
+      const cart = this.cartService.cart();
+      if (cart) {
+        cart.deliveryMethodId = undefined;
+      }
       this.addressElement = await this.stripeService.createAddressElement();
       this.addressElement.mount('#address-element');
       this.addressElement.on('change',this.handleAddressChange);
@@ -121,44 +127,46 @@ async onStepChange(event: StepperSelectionEvent){
 }
 
     async confirmPayment(stepper: MatStepper){
-      this.loading=true;
-      try{
-          if(this.confirmationToken){
-            const result =await this.stripeService.confirmPayment(this.confirmationToken);
+  this.loading=true;
+  try{
+      if(this.confirmationToken){
+        const result =await this.stripeService.confirmPayment(this.confirmationToken);
 
-          if(result.paymentIntent?.status === 'succeeded'){
-            const order =await this.createOrderModel();
-            const orderResult =await firstValueFrom(this.orderService.createOrder(order));
+      if(result.paymentIntent?.status === 'succeeded'){
+        const order =await this.createOrderModel();
+        const orderResult =await firstValueFrom(this.orderService.createOrder(order));
 
-            if(orderResult){
-              this.orderService.orderComplete=true;
-               this.cartService.deleteCart();
-              this.cartService.selectedDelivery.set(null);
-              this.router.navigateByUrl('/checkout/success');
-            }
-            else{
-              throw new Error('Order creation failed');
-            }
-          }
-          else if (result.error){
-             throw new Error(result.error.message);
-          }
-          else{
-             throw new Error('Sumssing went wronge')
-          }
+        if(orderResult){
+          this.signalrService.orderSignal.set(orderResult);
 
+          this.orderService.orderComplete=true;
+          this.cartService.deleteCart();
+          this.cartService.selectedDelivery.set(null);
 
-          }
+          await new Promise(resolve => setTimeout(resolve, 500));
+
+          this.router.navigateByUrl('/checkout/success');
+        }
+        else{
+          throw new Error('Order creation failed');
+        }
       }
-      catch(error: any){
-          this.snackbar.error(error.message || 'something went wrong');
-          stepper.previous();
+      else if (result.error){
+         throw new Error(result.error.message);
       }
-      finally{
-        this.loading=false;
+      else{
+         throw new Error('Something went wrong')
       }
-    }
-
+      }
+  }
+  catch(error: any){
+      this.snackbar.error(error.message || 'something went wrong');
+      stepper.previous();
+  }
+  finally{
+    this.loading=false;
+  }
+}
   private async createOrderModel() :Promise<OrderToCreate>{
     const cart =this.cartService.cart();
     const shippingAddress=await this.getAddressFromStripeAddress() as ShippingAddress;

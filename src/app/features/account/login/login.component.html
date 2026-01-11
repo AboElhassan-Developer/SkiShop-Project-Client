@@ -3,15 +3,51 @@
           <div class="text-center mb-6">
               <h1 class="text-3xl font-semibold text-primary">Login</h1>
           </div>
+
           <mat-form-field appearance="outline" class="w-full mb-4">
                <mat-label>Email address</mat-label>
-               <input formControlName="email" type="email" placeholder="name@example.com" matInput>
+               <input
+                    formControlName="email"
+                    type="email"
+                    placeholder="name@example.com"
+                    matInput>
+               @if(loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+                    <mat-error>
+                      @if(loginForm.get('email')?.hasError('required')) {
+                        Email is required
+                      }
+                      @if(loginForm.get('email')?.hasError('email')) {
+                        Invalid email format
+                      }
+                    </mat-error>
+               }
           </mat-form-field>
+
           <mat-form-field appearance="outline" class="w-full mb-4">
                <mat-label>Password</mat-label>
-               <input formControlName="password" type="password" placeholder="Password" matInput>
+               <input
+                    formControlName="password"
+                    type="password"
+                    placeholder="Password"
+                    matInput>
+               @if(loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+                    <mat-error>
+                      @if(loginForm.get('password')?.hasError('required')) {
+                        Password is required
+                      }
+                      @if(loginForm.get('password')?.hasError('minlength')) {
+                        Password must be at least 6 characters
+                      }
+                    </mat-error>
+               }
           </mat-form-field>
-           <button mat-flat-button type="submit" class="w-fit py-2">Sign in</button>
 
+          <button
+               [disabled]="loginForm.invalid"
+               mat-flat-button
+               type="submit"
+               class="w-fit py-2">
+               Sign in
+          </button>
      </form>
 </mat-card>
