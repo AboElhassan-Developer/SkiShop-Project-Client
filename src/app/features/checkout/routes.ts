@@ -5,7 +5,7 @@ import { CheckoutSuccessComponent } from "./checkout-success/checkout-success.co
 import { CheckoutComponent } from "./checkout.component";
 
 export const checkoutRoutes: Route[] = [
- {path :'', component: CheckoutComponent},
+ {path :'', component: CheckoutComponent,canActivate: [authGuard]},
         {path :'success', component: CheckoutSuccessComponent,
           canActivate:[authGuard, orderCompleteGuard]
         }

@@ -48,7 +48,7 @@ get500Error(){
   })
 }
 get400ValidationError(){
-  this.http.post(this.baseUrl + 'buggy/validtionerror',{}).subscribe({
+  this.http.post(this.baseUrl + 'buggy/validationerror',{}).subscribe({
     next:response =>console.log(response),
     error: error => this.validationErrors=error
 

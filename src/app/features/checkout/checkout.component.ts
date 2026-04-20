@@ -59,20 +59,24 @@ loading=false;
 
 async ngOnInit() {
     try {
-       this.cartService.selectedDelivery.set(null);
-      const cart = this.cartService.cart();
-      if (cart) {
-        cart.deliveryMethodId = undefined;
-      }
-      this.addressElement = await this.stripeService.createAddressElement();
-      this.addressElement.mount('#address-element');
-      this.addressElement.on('change',this.handleAddressChange);
+        this.cartService.selectedDelivery.set(null);
+        const cart = this.cartService.cart();
+        if (cart) {
+            cart.deliveryMethodId = undefined;
+        }
 
-      this.paymentElement=await this.stripeService.createPaymentElement();
-       this.paymentElement.mount('#payment-element');
-       this.paymentElement.on('change', this.handlePaymentChange)
-    } catch (error :any) {
-      this.snackbar.error(error.message);
+
+        await firstValueFrom(this.accountService.getUserInfo());
+
+        this.addressElement = await this.stripeService.createAddressElement();
+        this.addressElement.mount('#address-element');
+        this.addressElement.on('change', this.handleAddressChange);
+
+        this.paymentElement = await this.stripeService.createPaymentElement();
+        this.paymentElement.mount('#payment-element');
+        this.paymentElement.on('change', this.handlePaymentChange);
+    } catch (error: any) {
+        this.snackbar.error(error.message);
     }
 }
 
@@ -115,7 +119,7 @@ async onStepChange(event: StepperSelectionEvent){
    if(event.selectedIndex === 1){
       if(this.saveAddress){
         const address = await this.getAddressFromStripeAddress() as Address;
-        address && firstValueFrom(this.accountService.updateAddress(address));
+        address && await firstValueFrom(this.accountService.updateAddress(address));
       }
    }
    if(event.selectedIndex ===2){
@@ -201,7 +205,7 @@ async onStepChange(event: StepperSelectionEvent){
             line2: address.line2 || undefined,
             city :address.city,
             country: address.country,
-            state: address.state,
+           state: address.state || '',
             postalCode:address.postal_code
            }
     }

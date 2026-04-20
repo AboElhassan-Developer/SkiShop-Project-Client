@@ -23,7 +23,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         else{
           snackbar.error(err.error.title ||err.error);
         }
-       snackbar.error(err.error.title || err.error)
+       
       }
        if(err.status === 401){
        snackbar.error(err.error.title || err.error)

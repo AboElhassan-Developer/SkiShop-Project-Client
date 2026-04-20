@@ -20,7 +20,8 @@ export class SignalrService {
 
     this.hubConnection.start()
     .catch(error=> console.error(error));
-    this.hubConnection.on('OrderCompleteNotification',(order:Order)=>{
+    this.hubConnection.on('OrderCompleteNotification', (order: Order) => {
+    
         this.orderSignal.set(order)
     })
   }

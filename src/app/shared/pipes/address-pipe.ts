@@ -7,9 +7,9 @@ import { ShippingAddress } from '../models/order';
 })
 export class AddressPipe implements PipeTransform {
 
-  transform(value?: ConfirmationToken['shipping'] |ShippingAddress , ...args: unknown[]): unknown {
+  transform(value?: ConfirmationToken['shipping'] | ShippingAddress, ...args: unknown[]): unknown {
     if(value && 'address' in value && value.name){
-      const {line1, line2,city, state,country,postal_code} =
+      const {line1, line2, city, state,country,postal_code} =
       (value as ConfirmationToken['shipping'])?.address!;
       return `${value.name}, ${line1}${line2 ? ', ' + line2 :''},
       ${city}, ${state}, ${postal_code}, ${country}`;
