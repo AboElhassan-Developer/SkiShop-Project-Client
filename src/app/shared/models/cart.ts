@@ -21,6 +21,8 @@ export class Cart implements CartType{
   items: CartItem[]=[];
   deliveryMethodId?:number;
 paymentIntentId?:string;
-clientSecret?:string;
+  clientSecret?: string;
+  couponId?: string;
+  discount?: number
 
 }

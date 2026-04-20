@@ -14,7 +14,7 @@ export class AccountService {
   private signalrService=inject(SignalrService);
   currentUser =signal<User | null>(null);
   isAdmin = computed(() => {
-    const roles  =this.currentUser()?.roles;
+    const roles  =this.currentUser()?.roles|| this.currentUser()?.role;
     return Array.isArray(roles) ? roles.includes('Admin') : roles === 'Admin';
   });
 

@@ -14,8 +14,9 @@ import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { CartService } from './cart.service';
 import { Cart } from '../../shared/models/cart';
-import { firstValueFrom, map, switchMap, tap } from 'rxjs';
+import { catchError, firstValueFrom, map, switchMap, tap } from 'rxjs';
 import { AccountService } from './account.service';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -37,16 +38,15 @@ export class StripeService {
     return this.stripePromise;
   }
 
- async initializeElements() {
-    if(!this.elements){
-      const stripe =await this.getStripeInstance();
-      if(stripe){
-        const cart =await firstValueFrom(this.createOrUpdatePaymentIntent());
-        this.elements =stripe.elements(
-          {clientSecret :cart.clientSecret,appearance: {labels:'floating'},locale: 'en'})
-      }
-      else{
-        throw new Error ('Stripe has not been loaded');
+  async initializeElements() {
+    if (!this.elements) {
+      const stripe = await this.getStripeInstance();
+      if (stripe) {
+        const cart = await firstValueFrom(this.createOrUpdatePaymentIntent());
+        this.elements = stripe.elements(
+          { clientSecret: cart.clientSecret, appearance: { labels: 'floating' }, locale: 'en' })
+      } else {
+        throw new Error('Stripe has not been loaded');
       }
     }
     return this.elements;
@@ -70,7 +70,6 @@ export class StripeService {
       if (elements) {
         const user = this.accountService.currentUser();
         let defaultValues: StripeAddressElementOptions['defaultValues'] = {};
-
         if (user) {
           defaultValues.name = user.firstName + ' ' + user.lastName;
         }
@@ -127,18 +126,30 @@ export class StripeService {
     }
   }
 
-  createOrUpdatePaymentIntent(){
-    const cart= this.cartService.cart();
-    if(!cart) throw new Error('Problem with cart');
+  createOrUpdatePaymentIntent() {
+    const cart = this.cartService.cart();
+    if (!cart) throw new Error('Problem with cart');
     return this.http.post<Cart>(this.baseUrl + 'payments/' + cart.id, {}).pipe(
-      map(async cart =>{
-       await firstValueFrom( this.cartService.setCart(cart));
+      map(async cart => {
+        await firstValueFrom(this.cartService.setCart(cart));
         return cart;
       })
     )
   }
 
-
+  applyCoupon(code: string) {
+    const cart = this.cartService.cart();
+    if (!cart) throw new Error('Problem with cart');
+    return this.http.post<Cart>(this.baseUrl + 'payments/apply-coupon/' + cart.id, { code }).pipe(
+      map(async cart => {
+        await firstValueFrom(this.cartService.setCart(cart));
+        return cart;
+      }),
+      catchError(err => {
+        throw new Error(err.error || 'Invalid coupon');
+      })
+    );
+  }
 
   disposeElements() {
     this.elements = undefined;
